@@ -51,7 +51,7 @@ All material, including our training dataset, is made available under MIT licens
 
 ## Using pre-trained networks
 
-We trained four GANs, conditioned to probability maps only, and conditioning to probability maps, global features (e.g., channel sinuosity, channel width, non-channel mud proportion) and well facies data together. In [Code](./Code/), there are two subfolders: [4-Upload_cond_Probmap](./Code/ 4-Upload_cond_Probmap/) and [5-Upload_cond_well_globalfeatures_probmap](./Code/ 5-Upload_cond_well_globalfeatures_probmap/); the former is used for only conditioning to probability maps, and the latter is used for conditioning to all probability maps, global features, and well facies data together. All GANs are trained with progressive training method illustrated in our previous paper (see Github repository https://github.com/SuihongSong/GeoModeling_Unconditional_ProGAN).
+We trained four GANs, conditioned to probability maps only, and conditioning to probability maps, global features (e.g., channel sinuosity, channel width, non-channel mud proportion) and well facies data together. In [Code](./Code/), there are two subfolders: [4-Upload_cond_Probmap](./Code/4-Upload_cond_Probmap/) and [5-Upload_cond_well_globalfeatures_probmap](./Code/5-Upload_cond_well_globalfeatures_probmap/); the former is used for only conditioning to probability maps, and the latter is used for conditioning to probability maps, global features, and well facies data together. All GANs are trained with progressive training method illustrated in our previous paper (see Github repository https://github.com/SuihongSong/GeoModeling_Unconditional_ProGAN).
 
 The pre-trained GANs (including generators) are evaluated in ` Analyses_of_Trained_Generator.ipynb ` (refered to as `*.ipynb` in following) files using Test dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV, Google Drive, https://drive.google.com/drive/folders/1K3ajEGq-l2ENfXsy2vH4Ko5hM5fRDkLP) regarding the evaluation metrics in paper. Corresponding to the two pre-trained GANs, there are two indepedent evaluation \*.ipynb files: 
 
@@ -118,7 +118,7 @@ G, D, Gs = pickle.load(file)
 
 The above code unpickles pre-trained GAN networks to yield 3 instances of networks. To generate facies models, you will want to use `Gs` or `G`. The exact details of the generator and discriminator are defined in [networks.py](./Code/4-Upload_cond_Probmap/networks.py) or [networks.py](./Code/5-Upload_cond_well_globalfeatures_probmap/networks.py) (see ` G_paper `, and ` D_paper `). 
 
-The input of generator contains latent vectors of 128 dimensions, global features, well facies data, or both global features and well facies data, depending on which data the generator is conditioned to:
+The input of generator contains latent vectors of 128 dimensions, global features, well facies data, or probability maps, depending on which data the generator is conditioned to:
 
 (1) for generator only conditioned to probability maps, the inputs have dimensions of [[N, 128], [N, 4], [N, 1, 64, 64]]. N refers to number of input vectors, 128 is dimension of latent vector. 4 is the dimension of global features, which are not cast away in current version, but the input global features have no controlling effects on outputs, so input global features can be just set as random values. [1, 64, 64] refers to the dimension of input channel complex probability map. 
 
@@ -126,7 +126,7 @@ The input of generator contains latent vectors of 128 dimensions, global feature
 
 ## Training dataset
 
-The training dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV) includes synthesized facies models, corresponding global features, probability maps, and well facies data. Training facies models are stored as multi-resolution TFRecords. Each original facies model (64x64) is downsampled into multiple resolutions (32x32, …, 4x4) and stored in `1r*.tfrecords` files for efficient streaming during training. There is a separate `1r*.tfrecords` file for each resolution. Training probability maps are stored as `*.2probimages.tfrecords`; training well facies data is stored as `*3wellfacies.tfrecords`; training global features are stored as `*-4rxx.labels`.
+The training dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV) includes synthesized facies models, corresponding global features, probability maps, and well facies data. Training facies models are stored as multi-resolution TFRecords. Each original facies model (64x64) is downsampled into multiple resolutions (32x32, …, 4x4) and stored in `1r*.tfrecords` files for efficient streaming during training. There is a separate `1r*.tfrecords` file for each resolution. Training probability maps are stored as `*.2probimages.tfrecords`; training well facies data is stored as `*3wellfacies.tfrecords`; training global features are stored as `*4rxx.labels`.
 
 ## Training networks
 
@@ -152,7 +152,7 @@ dataset.well_enlarge = True; desc += '-Enlarg';  # uncomment this line to let th
 
 ## Assessment of the trained generator
 
-Each of the four pre-trained generators are evaluated using Test dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV) in `Analyses_of_Trained_Generator.ipynb ` files:
+Each of the two pre-trained generators are evaluated using Test dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV) in `Analyses_of_Trained_Generator.ipynb ` files:
 
 (1) for generator only conditioned to probability maps [Analyses_of_Trained_Generator.ipynb](./Code/4-Upload_cond_Probmap/Analyses_of_Trained_Generator.ipynb); 
 
