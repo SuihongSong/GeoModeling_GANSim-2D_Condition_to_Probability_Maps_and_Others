@@ -128,6 +128,61 @@ The input of generator contains latent vectors of 128 dimensions, global feature
 
 The training dataset (Zenodo, https://zenodo.org/record/3977852#.X1JFdMhKjIV) includes synthesized facies models, corresponding global features, probability maps, and well facies data. Training facies models are stored as multi-resolution TFRecords. Each original facies model (64x64) is downsampled into multiple resolutions (32x32, …, 4x4) and stored in `1r*.tfrecords` files for efficient streaming during training. There is a separate `1r*.tfrecords` file for each resolution. Training probability maps are stored as `*.2probimages.tfrecords`; training well facies data is stored as `*3wellfacies.tfrecords`; training global features are stored as `*4rxx.labels`.
 
+
+### How to make training data as TFRecords?
+
+(1) In our study, we synthesize training facies models using object-based method in Petrel software, and export them into one file as model properties with `"Gslib"` format. An Gslib format example of the exported file is [Format_example_of_simulated_facies_models_from_Petrel.txt](./Code/Format_example_of_simulated_facies_models_from_Petrel.txt).
+
+First lines of the exported file are like:
+
+>PETREL: Properties
+>
+>17820 % Number of synthesized facies models
+>
+>Facies unit1 scale1
+>
+>Facies unit1 scale1
+>
+>...
+>
+>Facies unit1 scale1
+>
+>% Totally, there are 64x64 lines, corresponding to 64x64 pixels in each facies model; each line has 17820 numbers splitted by space, corresponding to 17820 facies code values of 17820 generated facies realizations at each pixel. 0-background mud faceis, 1-channel sand facies, 2-channel bank facies.
+>
+>0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ... 0.000000 1.000000 2.000000
+>
+>0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 ... 0.000000 0.000000 0.000000
+>
+>...
+>
+>0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ... 0.000000 0.000000 0.000000
+
+
+(2) This exported file containing synthesized facies models is read in [Preparing_training_and_test_datasets.ipynb](./Code/Preparing_training_and_test_datasets.ipynb). The data in the file is rearranged into `(FaciesModelNumber, 1, 64, 64)`. 
+
+In our study, when synthesizing facies models in Petrel, we only consider orientation of channels varying from 0 to 90 degrees, thus in [Preparing_training_and_test_datasets.ipynb](./Code/Preparing_training_and_test_datasets.ipynb), we further enlarge the facies model dataset by reversing the synthesized facies mdoels vertically whose orientation become from -90 to 0 degrees:
+```
+allimgs = np.concatenate((partimgs, partimgs[::-1,:,:]),2)
+```
+Other software, like SGeMS, can also be used to simulate the training facies models, as long as the final generated facies models are arranged into `(FaciesModelNumber, 1, 64, 64)`.
+
+Global features (also called labels) are arranged into `(FaciesModelNumber, GlobalFeaturesNumber)`.
+
+(3) The facies models are then used to simulate probability maps in `3 Generate probability maps` of [Preparing_training_and_test_datasets.ipynb](./Code/Preparing_training_and_test_datasets.ipynb). The probability maps are then used to produce well facies data in `4 Generate well facies` of [Preparing_training_and_test_datasets.ipynb](./Code/Preparing_training_and_test_datasets.ipynb). 
+
+(4) When downsampling training facies models, two methods were proposed currently: `averaging facies codes`, or `remaining the most frequent facies code`. In this paper, here we use the `remaining the most frequent facies code` method. In the near future, we will propose to use a third downsampling method: averaging indicator of each facies. 
+
+```
+# used to produce low-D with most frequent facies code
+real_img_t = np.expand_dims(real_img, axis = 3)
+real_img_t_c = np.concatenate((real_img_t[:, 0::2, 0::2], real_img_t[:, 0::2, 1::2], real_img_t[:, 1::2, 0::2], real_img_t[:, 1::2, 1::2]), axis = 3)                
+mode, _ = stats.mode(real_img_t_c, axis = 3)
+real_img = np.squeeze(mode, axis = 3)
+                
+# used to produce low-D with averaging method
+#real_img = (real_img[:, 0::2, 0::2] + real_img[:, 0::2, 1::2] + real_img[:, 1::2, 0::2] + real_img[:, 1::2, 1::2]) * 0.25  
+```
+
 ## Training networks
 
 Once the training dataset and related codes are downloaded, you can train your own facies model generators as follows:
