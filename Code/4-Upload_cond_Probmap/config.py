@@ -11,6 +11,9 @@ class EasyDict(dict):
 # Paths.
 
 data_dir = '/scratch/users/suihong/DataSets(MultiChannels_V4_Consistency_HighestFrequcyDownSampling)/'
+# "data_dir" refers to the path of grandparent directory of training dataset like *.tfrecord files. "dataset" in line 33 refers to parent folder name of training dataset.
+# e.g., folder "AA/BB/CC" includes all the *.tfrecord files training dataset, then data_dir = 'AA/BB/', and in line 33, tfrecord_dir=  'CC'. 
+
 result_dir = '/scratch/users/suihong/ProGAN_MultiChannel_Reusults_ConditionedtoMultiConditions_TF'
 
 #----------------------------------------------------------------------------
@@ -27,7 +30,7 @@ env.TF_CPP_MIN_LOG_LEVEL                        = '0'       # 0 (default) = Prin
 #----------------------------------------------------------------------------
 desc        = 'pgan'                                        # Description string included in result subdir name.
 random_seed = 1000                                          # Global random seed.
-dataset     = EasyDict(tfrecord_dir='TrainingData')         # Options for dataset.load_dataset(). dataset is from 'TrainingData' folder of data_dir 
+dataset     = EasyDict(tfrecord_dir='TrainingData')         # Replace 'TrainingData' with parent folder name of *.tfrecords training dataset.  
 train       = EasyDict(func='train.train_progressive_gan')  # Options for main training func.
 G           = EasyDict(func='networks.G_paper')             # Options for generator network.
 D           = EasyDict(func='networks.D_paper')             # Options for discriminator network.
