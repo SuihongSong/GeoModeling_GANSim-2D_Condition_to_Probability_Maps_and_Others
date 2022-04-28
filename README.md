@@ -15,11 +15,11 @@
 
 This repository contains the official TensorFlow implementation of the following paper:
 
-> **Bridging the gap between geophysics and geology with Generative Adversarial Networks (GANs)** <br>
+> **Bridging the Gap Between Geophysics and Geology With Generative Adversarial Networks** <br>
 > Suihong Song (CUPB & Stanford), Tapan Mukerji (Stanford), and Jiagen Hou (CUPB)<br>
 > CUPB: China University of Petroleum - Beijing
 
-> https://eartharxiv.org/ch8xf/
+> https://ieeexplore.ieee.org/abstract/document/9399180
 >
 > **Abstract:** Inverse mapping from geophysics to geology is a difficult problem due to the inherent uncertainty of geophysical data and the spatially heterogeneous patterns (structure) in geology. We describe GANSim, a type of generative adversarial networks (GANs) that discovers the mapping between remotely-sensed geophysical information and geology with realistic patterns, with a specially designed loss function and an input architecture for geophysics-interpreted probability maps. This GANSim is then used to produce realizations of realistic geological facies models conditioned to the probability maps alone or together with well observations and global features. By evaluation, the generated facies models are realistic, diversified, and consistent with all input conditions. We demonstrate that the GAN learns the implicit geological pattern knowledge from training data and the knowledge of conditioning to inputs from human-defined explicit functions. Given the commonality of probability maps, sparse measurements, and global features, GANSim should be applicable to many problems of geosciences.
 
@@ -32,7 +32,7 @@ For any question, please contact [songsuihong@126.com]<br>
 
 Material related to our paper is available via the following links:
 
-- Paper: https://eartharxiv.org/ch8xf/ or (my research gate) https://www.researchgate.net/profile/Suihong_Song.
+- Paper: https://ieeexplore.ieee.org/abstract/document/9399180 or (my research gate) https://www.researchgate.net/profile/Suihong_Song.
 - Code: (Github) https://github.com/SuihongSong/GeoModeling_Conditional_to_Probability_maps_plus 
 - Training and test datasets: (Zenodo) https://zenodo.org/record/3977852#.X1HazshKhaQ
 - Pre-trained GANs: (Zenodo) https://zenodo.org/record/3977852#.X1HazshKhaQ, or (Google Drive) https://drive.google.com/drive/folders/1K3ajEGq-l2ENfXsy2vH4Ko5hM5fRDkLP
