@@ -217,6 +217,9 @@ Detailed steps are illustrated inside these `*.ipynb` files. How to run them is 
 
 Please note that the exact results may vary from run to run due to the non-deterministic nature of TensorFlow.
 
+## License
+Most code files of this study are derived from the original Progressive GANs work (https://github.com/tkarras/progressive_growing_of_gans), but we have largely amended the original codes, especially networks.py, loss.py, dataset.py, and train.py. The original Progressive GANs codes are under license of Attribution-NonCommercial 4.0 International (https://creativecommons.org/licenses/by-nc/4.0/). Other materials produced by us (e.g., the trained models and the parts of codes we have added or adjusted) are under MIT license. 
+
 ## Acknowledgements
 
 Code for this project is improved from the original code of Progressive GANs (https://github.com/tkarras/progressive_growing_of_gans). We thank the authors for their great job.
