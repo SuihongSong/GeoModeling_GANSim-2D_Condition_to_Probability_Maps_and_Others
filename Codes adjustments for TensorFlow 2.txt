@@ -1,0 +1,49 @@
+To run the codes within TensorFlow 2.x, please follow the these adjustments:
+
+1. Tested configuration: py-tensorflow/2.1.0_py36, cudnn/7.6.5; tested on GPU-V100
+2. Codes adjustment: 
+
+  (1) Replace "tensorflow" with "tensorflow.compat.v1" in all code files to avoid errors caused by placeholder which is removed in tf2, e.g., import tensorflow.compat.v1 as tf
+  
+  (2) In train.py, insert "tf.disable_v2_behavior()" after 'import tensorflow.compat.v1 as tf' line.
+   
+   (3) In tfutil.py:
+   
+   At line 20, '.value' may need to be deleted depending on the tensorflow version, if relative error is reported: [dim for dim in shape]
+   
+   Insert 'from tensorflow.python.ops import nccl_ops as nccl' in the front. 
+   
+   In about line 332, when reduce_sum the gradients produced from different gpu divices, use "g = nccl.all_sum(g)"
+   
+   When define "import_module" function in about line 216, replace "tensorflow" into "tensorflow.compat.v1"
+
+   
+   (4) In 'Analyses_of_Trained_Generator.ipynb' file, replace "tensorflow" with "tensorflow.compat.v1" and add two lines after that line: tf.disable_eager_execution(), tf.disable_v2_behavior()
+   
+
+
+
+
+
+The deep learning models trained within TensorFlow 1 can also be loaded and applied using TensorFlow 2, after several lines of code adjustements:
+
+1. Tested configuration: py-tensorflow/2.1.0_py36, cudnn/7.6.5; tested on GPU-V100
+2. Codes adjustment: 
+
+  (1) Replace "tensorflow" with "tensorflow.compat.v1" in all code files to avoid errors caused by placeholder which is removed in tf2, e.g., import tensorflow.compat.v1 as tf
+  
+  
+  (2) In tfutil.py, at line 564-565 (after "self._build_func_name = state['build_func_name']"), insert following new codes:
+  
+       self._build_module_src = self._build_module_src.replace('tensorflow', 'tensorflow.compat.v1')
+       
+       # Depending on the cudnn versions, this following line may be needed, otherwise error reported ('argument 0 of dimension....')
+       self._build_module_src = self._build_module_src.replace('.value','')
+       
+       The reason is that, when loading the pretrained neural network files ("xxxx.pkl" file), the codes inside the file descriping how the deep learning architecture is constructed are actually performed to reconstruct the architecture.
+       In these codes, we also need to replace 'tensorflow' with 'tensorflow.compat.v1'. 
+   
+   (3) In tfutil.py, at line 20, '.value' may need to be deleted depending on the tensorflow version, if relative error is reported ('int object has no attribute value'), i.e., [dim for dim in shape]
+   
+   (4) In 'Analyses_of_Trained_Generator.ipynb' file, replace "tensorflow" with "tensorflow.compat.v1" and add two lines after that line: tf.disable_eager_execution(), tf.disable_v2_behavior()
+   
