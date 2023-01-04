@@ -3,7 +3,6 @@
 
 
 ![Python 3.6](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)
-
 ![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=plastic)
 
 ![Teaser image](./Generated_facies_models_conditioned_to_probmap_mudprop_wellfacies.png) 
